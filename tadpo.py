@@ -419,6 +419,7 @@ class TADPO(OnPolicyAlgorithm):
                     values, log_prob, entropy = self.policy.evaluate_actions(
                         rollout_data.observations, actions
                     )
+                    values = values.detach()
                     teacher_log_prob = rollout_data.old_log_prob
 
                     student_advantage = rollout_data.returns - values
@@ -496,7 +497,7 @@ class TADPO(OnPolicyAlgorithm):
                         rollout_data.observations, actions
                     )
                     # Student should not optimize its value function over teacher episodes
-                    values = values.detach().flatten()
+                    values = values.flatten()
                     # Normalize advantage
                     advantages = rollout_data.advantages
                     # Normalization does not make sense if mini batchsize == 1, see GH issue #325
